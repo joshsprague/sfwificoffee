@@ -1,31 +1,3 @@
-
-//Set map tile
-	var map = L.map('map');
-		L.tileLayer('http://{s}.tile.cloudmade.com/a1ed8ecdfd8e41d890fc74beb07cdc63/997/256/{z}/{x}/{y}.png', {
-		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-		maxZoom: 18
-	}).addTo(map);
-
-//Set map to start at mobile location
-		map.locate({setView: true, maxZoom: 16});
-
-	function onLocationFound(e) {
-		var radius = e.accuracy / 2;
-		L.marker(e.latlng).addTo(map)
-		.bindPopup("You are within " + radius + " meters from this point").openPopup();
-		L.circle(e.latlng, radius).addTo(map);
-	}
-
-//Show error if can't get location
-	map.on('locationfound', onLocationFound);
-
-	function onLocationError(e) {
-		alert(e.message);
-		}
-
-	map.on('locationerror', onLocationError);
-
-
 var cafes = [
   {
     x:-122.410957,
@@ -1037,29 +1009,30 @@ var cafes = [
   }
 ];
 
-//Hand coded markers
-/* var coffeeIcon1 = L.icon({
-	iconUrl: 'coffee1.png',
-	iconSize: [30, 30],
-});
-*/
+var geoConverter = function(data){
+  var newObj = {
+    "type": "FeatureCollection",
+    "features": []
+  };
 
-//L.marker([37.762539, -122.395996]).addTo(map);
-for (var i=0; i<cafes.length; i++) {
-L.marker([cafes[i]["y"], cafes[i]["x"]]).bindPopup(cafes[i]["name"]+"<br>"+cafes[i]["description"]).addTo(map);
-}
-//  Unused Test code
-//	marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-//	circle.bindPopup("I am a circle.");
-//	polygon.bindPopup("I am a polygon.");
+  var counter = 0;
+  for (var i = 0; i < data.length; i++){
+    //create a new object to push into GeoJson features array
+    var temp = {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [data[i]["x"], data[i]["y"]]
+      },
+      "properties": {
+        "name": data[i]["name"],
+        "description": data[i]["description"]
+      }
+    };
 
-//	var popup = L.popup()
-//	.setLatLng([51.5, -0.09])
-//	.setContent("I am a standalone popup.")
-//	.openOn(map);
+    newObj["features"].push(temp);
+    counter++;
+  }
 
-//var josh = function() {
-//for (var i=0; i<3; i++) {
-//	L.marker([cafes[i][y], cafes[i][x]]).addTo(map);
-//}
-//}
+  return newObj;
+};
