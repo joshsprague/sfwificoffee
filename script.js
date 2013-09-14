@@ -1,11 +1,17 @@
 
 //Set map tile
-	var map = L.map('map');
-		L.tileLayer('http://{s}.tile.cloudmade.com/a1ed8ecdfd8e41d890fc74beb07cdc63/997/256/{z}/{x}/{y}.png', {
-		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-		maxZoom: 18
-	}).addTo(map);
+	// var map = L.map('map');
+	// 	L.tileLayer('http://{s}.tile.cloudmade.com/a1ed8ecdfd8e41d890fc74beb07cdc63/997/256/{z}/{x}/{y}.png', {
+	// 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+	// 	maxZoom: 18
+	// }).addTo(map);
+var layer = new L.StamenTileLayer("toner-lite");
+var map = new L.Map("map", {
+  center: new L.LatLng(37.75, -122.45),
+  zoom: 12
+});
 
+map.addLayer(layer);
 //Set map to start at mobile location
 		map.locate({setView: true, maxZoom: 16});
 
@@ -1038,28 +1044,16 @@ var cafes = [
 ];
 
 //Hand coded markers
-/* var coffeeIcon1 = L.icon({
-	iconUrl: 'coffee1.png',
-	iconSize: [30, 30],
+var redIcon = L.icon({
+	iconUrl: './img/redCoffeeMug.png'
 });
-*/
 
-//L.marker([37.762539, -122.395996]).addTo(map);
+var redIconBox = L.icon({
+  iconUrl: './img/redCoffee.png'
+});
+
+
 for (var i=0; i<cafes.length; i++) {
-L.marker([cafes[i]["y"], cafes[i]["x"]]).bindPopup(cafes[i]["name"]+"<br>"+cafes[i]["description"]).addTo(map);
+L.marker([cafes[i]["y"], cafes[i]["x"]], {icon: redIconBox}).bindPopup(cafes[i]["name"]+"<br>"+cafes[i]["description"]).addTo(map);
 }
-//  Unused Test code
-//	marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-//	circle.bindPopup("I am a circle.");
-//	polygon.bindPopup("I am a polygon.");
 
-//	var popup = L.popup()
-//	.setLatLng([51.5, -0.09])
-//	.setContent("I am a standalone popup.")
-//	.openOn(map);
-
-//var josh = function() {
-//for (var i=0; i<3; i++) {
-//	L.marker([cafes[i][y], cafes[i][x]]).addTo(map);
-//}
-//}
